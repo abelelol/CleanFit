@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavEntry
+import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import com.example.cleanfit.ui.dashboard.HomeScreen
 import com.example.cleanfit.ui.login.LoginScreen
@@ -23,30 +24,53 @@ fun NavigationRoot(
     NavDisplay(
         backStack = backStack,
         onBack = { backStack.removeLastOrNull() },
-        entryProvider = { key ->
-            when (key) {
-                is Route.LoginRoute -> NavEntry(key) {
-                    LoginScreen(
-                        onLoginSuccess = {
-                            backStack.clear() // You clear out the login screen from the stack/list
-                            backStack.add(Route.HomeRoute(it))
-                        }
-                    )
-                }
-
-                is Route.HomeRoute -> NavEntry(key) {
-                    HomeScreen(name = key.name)
-                }
-                is Route.CameraRoute -> NavEntry(key) {
-                    TODO()
-                }
-                is Route.ClosetRoute -> NavEntry(key) {
-                    TODO()
-                }
-
-                else -> NavEntry(Unit) { Text("Unknown route") }
+        entryProvider = entryProvider {
+            entry<Route.LoginRoute> {
+                LoginScreen(
+                    onLoginSuccess = {
+                        backStack.clear() // You clear out the login screen from the stack/list
+                        backStack.add(Route.HomeRoute(it))
+                    }
+                )
+            }
+            entry<Route.HomeRoute> {
+                HomeScreen(name = it.name)
+            }
+            entry<Route.CameraRoute>{
+                TODO()
+            }
+            entry<Route.ClosetRoute>{
+                TODO()
+            }
+            // look into else case for wrong entry
+            entry<Route> {
+                Text("Unknown route")
             }
         }
+//        entryProvider = { key ->
+//            when (key) {
+//                is Route.LoginRoute -> NavEntry(key) {
+//                    LoginScreen(
+//                        onLoginSuccess = {
+//                            backStack.clear() // You clear out the login screen from the stack/list
+//                            backStack.add(Route.HomeRoute(it))
+//                        }
+//                    )
+//                }
+//
+//                is Route.HomeRoute -> NavEntry(key) {
+//                    HomeScreen(name = key.name)
+//                }
+//                is Route.CameraRoute -> NavEntry(key) {
+//                    TODO()
+//                }
+//                is Route.ClosetRoute -> NavEntry(key) {
+//                    TODO()
+//                }
+//
+//                else -> NavEntry(Unit) { Text("Unknown route") }
+//            }
+//        }
     )
 
 
