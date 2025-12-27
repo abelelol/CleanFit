@@ -97,13 +97,19 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        TextButton(onClick = {}) {
+        TextButton(
+            onClick = {}, 
+            enabled = false // disable for now
+        ) {
             Text("Forgot Password")
         }
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        Button(onClick = launchGoogleSheet) {
+        Button(
+            onClick = launchGoogleSheet,
+            enabled = false // disable for now 
+        ) {
             Text("Sign in with google")
         }
     }
