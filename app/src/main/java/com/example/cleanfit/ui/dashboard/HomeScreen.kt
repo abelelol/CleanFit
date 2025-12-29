@@ -21,6 +21,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 
@@ -43,16 +45,8 @@ fun HomeScreen(name: String) {
             )
         },
         bottomBar = {
-            BottomAppBar(
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                contentColor = MaterialTheme.colorScheme.primary,
-            ) {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    textAlign = TextAlign.Center,
-                    text = "Bottom app bar",
-                )
+            NavigationBar(windowInsets = NavigationBarDefaults.windowInsets) {
+
             }
         },
         floatingActionButton = {

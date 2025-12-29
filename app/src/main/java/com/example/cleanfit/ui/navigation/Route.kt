@@ -9,19 +9,19 @@ sealed interface Route : NavKey {
 
     //Initial login screen
     @Serializable
-    data object LoginRoute : Route, NavKey
+    data object LoginRoute : Route
 
     // the main screen after login
     @Serializable
-    data class HomeRoute(val name: String) : Route, NavKey
+    data class HomeRoute(val name: String) : Route
 
     // screen to open camera view to take a picture
     @Serializable
-    data object CameraRoute : Route, NavKey
+    data object CameraRoute : Route
 
     // screen to see all stores photos taken from app
     @Serializable
-    data object ClosetRoute : Route, NavKey
+    data object ClosetRoute : Route
 
 
 
