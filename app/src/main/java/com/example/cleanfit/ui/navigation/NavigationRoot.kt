@@ -12,11 +12,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import com.example.cleanfit.ui.camera.CameraScreen
 import com.example.cleanfit.ui.dashboard.HomeScreen
 import com.example.cleanfit.ui.login.LoginScreen
 
@@ -28,20 +30,30 @@ data class Product(val id: String)
 fun NavigationRoot(
     modifier: Modifier = Modifier
 ){
-    val backStack = remember { mutableStateListOf<Any>(Route.LoginRoute) }
+//    val backStack = remember { mutableStateListOf<Any>(Route.LoginRoute) }
+    val navigationState = rememberNavigationState(
+        startRoute = Route.HomeRoute,
+        topLevelRoutes = TOP_LEVEL_DESTINATIONS.keys
+    )
+    val navigator = remember(navigationState){
+        Navigator(navigationState)
+    }
+
 
     Scaffold(
         modifier = modifier,
         bottomBar = {
-            AnimatedVisibility(
-                // Novel way to hide my navbar if i'm on login screen
-                visible = backStack.lastOrNull() != Route.LoginRoute
-            ) {
+//            AnimatedVisibility(
+//                // Novel way to hide my navbar if i'm on login screen
+//                visible = backStack.lastOrNull() != Route.LoginRoute
+//            ) {
                 CleanFitNavBar(
-                    selectedKey = (backStack.lastOrNull()) as NavKey,
-                    onSelectKey = { backStack.add(it) }
+                    selectedKey = navigationState.topLevelRoute,
+                    onSelectKey = {
+                        navigator.navigate(it as Route)
+                    }
                 )
-            }
+//            }
 
         }
     ) { innerPadding ->
@@ -49,74 +61,45 @@ fun NavigationRoot(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
-            backStack = backStack,
-            onBack = { backStack.removeLastOrNull() },
-            entryProvider = entryProvider {
-                entry<Route.LoginRoute> {
-                    LoginScreen(
-                        onLoginSuccess = {
-                            backStack.clear() // You clear out the login screen from the stack/list
-                            backStack.add(Route.HomeRoute(it))
+            onBack = navigator::goBack,
+            entries = navigationState.toEntries (
+                entryProvider {
+                    entry<Route.HomeRoute> {
+                        // doesnt work atm
+                        HomeScreen(
+                            onScanClick = { navigator.navigate(Route.CameraRoute) },
+                            onClosetClick = { navigator.navigate(Route.ClosetRoute) }
+                        )
+                    }
+                    entry<Route.CameraRoute>{
+                        CameraScreen(
+                            onImageCaptured = {
+                               // navigator.navigate(Route.HomeRoute)
+                            },
+                            onCloseClick = {
+                                navigator.navigate(Route.HomeRoute)
+                            }
+                        )
+                    }
+                    entry<Route.ClosetRoute>{
+                        Box(modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center) {
+                            Text("Closet")
                         }
-                    )
-                }
-                entry<Route.HomeRoute> {
-                    HomeScreen(name = it.name)
-                }
-                entry<Route.CameraRoute>{
-                    Box(modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center) {
-                        Text("Camera")
                     }
+                    // look into else case for wrong entry
+//                    entry<Route> {
+//                        Box(modifier = Modifier.fillMaxSize(),
+//                            contentAlignment = Alignment.Center) {
+//                            Text("Unknown Route")
+//                        }
+//                    }
                 }
-                entry<Route.ClosetRoute>{
-                    Box(modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center) {
-                        Text("Closet")
-                    }
-                }
-                // look into else case for wrong entry
-                entry<Route> {
-                    Box(modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center) {
-                        Text("Unknown Route")
-                    }
-                }
-            }
-
+            )
         )
-
 
     }
 
-//    NavDisplay(
-//        backStack = backStack,
-//        onBack = { backStack.removeLastOrNull() },
-//        entryProvider = entryProvider {
-//            entry<Route.LoginRoute> {
-//                LoginScreen(
-//                    onLoginSuccess = {
-//                        backStack.clear() // You clear out the login screen from the stack/list
-//                        backStack.add(Route.HomeRoute(it))
-//                    }
-//                )
-//            }
-//            entry<Route.HomeRoute> {
-//                HomeScreen(name = it.name)
-//            }
-//            entry<Route.CameraRoute>{
-//                TODO()
-//            }
-//            entry<Route.ClosetRoute>{
-//                TODO()
-//            }
-//            // look into else case for wrong entry
-//            entry<Route> {
-//                Text("Unknown route")
-//            }
-//        }
-//
-//    )
 
 
 }

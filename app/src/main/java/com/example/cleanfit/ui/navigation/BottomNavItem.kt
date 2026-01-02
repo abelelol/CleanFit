@@ -12,7 +12,7 @@ data class BottomNavItem (
 )
 
 val TOP_LEVEL_DESTINATIONS = mapOf(
-    (Route.HomeRoute) as Object to BottomNavItem(
+    Route.HomeRoute to BottomNavItem(
         icon = Icons.Filled.Home,
         title = "Home"
     ),

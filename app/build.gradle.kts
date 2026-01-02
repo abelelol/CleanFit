@@ -56,7 +56,8 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation("androidx.compose.material:material-icons-extended") // why the heck do i need another artifact to get material 3 icons !?
+    implementation("androidx.compose.material:material-icons-extended")
+    implementation(libs.androidx.camera.view) // why the heck do i need another artifact to get material 3 icons !?
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -92,6 +93,25 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
     implementation(libs.androidx.material3.adaptive.navigation3)
     implementation(libs.kotlinx.serialization.core)
+
+    // Camerax/Ml kit
+    val camerax_version = "1.4.2"
+    implementation (libs.androidx.camera.core)
+    implementation (libs.androidx.camera.camera2)
+    implementation (libs.androidx.camera.lifecycle)
+    implementation (libs.androidx.camera.video)
+    implementation (libs.androidx.camera.view.v142)
+    implementation (libs.androidx.camera.extensions)
+
+    implementation(libs.image.labeling)
+
+
+    // extras
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
+    implementation(libs.kotlinx.coroutines.play.services)
+
+
 
 
 }
