@@ -162,7 +162,10 @@ fun <T : NavKey> NavigationState<T>.toEntries(
 ): List<NavEntry<NavKey>> {
     val decoratedEntries = backStack.mapValues { (_, stack) ->
         val decorators = listOf(
+            // keeps track of scroll position and other stuff when navigating between screens
+            // reminds me of onsaveinstancestate in the fragment lifecycle
             rememberSaveableStateHolderNavEntryDecorator<NavKey>(),
+            // basically the same thing but doing it with the viewmodel
             rememberViewModelStoreNavEntryDecorator()
         )
         rememberDecoratedNavEntries(

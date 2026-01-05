@@ -84,15 +84,18 @@ fun LoginScreen(
         Text("Sign in to continue")
 
         Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(value = email, onValueChange = { email = it }, label = { Text("Email") })
+        OutlinedTextField(value = email, enabled = false, onValueChange = { email = it },
+            label = { Text("Email") }) // disabled since login is not actually happening
+
 
         Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(value = password, onValueChange = { password = it}, label = { Text("Password") })
+        OutlinedTextField(value = password, enabled = false, onValueChange = { password = it},
+            label = { Text("Password") }) // disabled since login is not actually happening
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(onClick = {onLoginSuccess(email)}){
-            Text("Login")
+            Text("Run Demo") // Changed text since login is not actually happening
         }
 
         Spacer(modifier = Modifier.height(24.dp))

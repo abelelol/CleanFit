@@ -57,7 +57,8 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation("androidx.compose.material:material-icons-extended")
-    implementation(libs.androidx.camera.view) // why the heck do i need another artifact to get material 3 icons !?
+    implementation(libs.androidx.camera.view)
+//    implementation(libs.image.labeling.custom.common) // why the heck do i need another artifact to get material 3 icons !?
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -103,7 +104,12 @@ dependencies {
     implementation (libs.androidx.camera.view.v142)
     implementation (libs.androidx.camera.extensions)
 
-    implementation(libs.image.labeling)
+//    implementation(libs.image.labeling)
+
+//    implementation(libs.object1.detection.custom)
+
+    implementation(libs.image.labeling.custom)
+    implementation(libs.androidx.palette)
 
 
     // extras

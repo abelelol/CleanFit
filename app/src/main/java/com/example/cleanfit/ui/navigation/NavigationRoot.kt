@@ -65,7 +65,6 @@ fun NavigationRoot(
             entries = navigationState.toEntries (
                 entryProvider {
                     entry<Route.HomeRoute> {
-                        // doesnt work atm
                         HomeScreen(
                             onScanClick = { navigator.navigate(Route.CameraRoute) },
                             onClosetClick = { navigator.navigate(Route.ClosetRoute) }
@@ -74,6 +73,8 @@ fun NavigationRoot(
                     entry<Route.CameraRoute>{
                         CameraScreen(
                             onImageCaptured = {
+                                //I really feel like i shouldn't be having this here,
+                            // will look into removing it late
                                // navigator.navigate(Route.HomeRoute)
                             },
                             onCloseClick = {
