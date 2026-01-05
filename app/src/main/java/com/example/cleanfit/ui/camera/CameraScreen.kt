@@ -113,16 +113,24 @@ fun CameraScreen(
                 showDialog = true,
                 data = ScanResultData(
                     itemType = result.category,
-                    dominantColorName = result.primaryColor,
-                    dominantColorHex = colorObj
+                    dominantColorHex = result.primaryColor,
+                    tertiaryColorHexes = result.tertiaryColors
                 ),
                 onDismissRequest = { viewModel.onDialogDismiss() },
                 onEditItemTypeClick = { /* TODO */ },
-                onEditColorClick = { /* TODO */ },
-                onAddToClosetClick = {
+
+                onAddToClosetClick = { finalItemType ,finalPrimaryColor, finalTertiaryList ->
+
+                    // TODO: save to Room Database
+                    println("Saving Item: ${result.category}")
+                    println("Final Item Type: $finalItemType")
+                    println("Final Primary: $finalPrimaryColor")
+                    println("Final Palette: $finalTertiaryList")
+
                     viewModel.onDialogDismiss()
                     onImageCaptured(true) // Navigate away
                 },
+
                 onRetakePhotoClick = {
                     viewModel.onDialogDismiss()
                 }

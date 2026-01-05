@@ -106,7 +106,7 @@ class ClothingImageAnalyzer @Inject constructor() {
             detectedLabel = finalLabel,
             confidence = finalConfidence,
             primaryColor = dominantHex,
-            tertiaryColors = mutableListOf()
+            tertiaryColors = tertiaryList
         )
 
     }

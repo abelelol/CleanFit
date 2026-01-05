@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Color
 
 data class ScanResultData(
     val itemType: String,
-    val dominantColorName: String,
-    val dominantColorHex: Color
+//    val dominantColorName: String,
+    val dominantColorHex: String,
+    val tertiaryColorHexes: List<String>
 )

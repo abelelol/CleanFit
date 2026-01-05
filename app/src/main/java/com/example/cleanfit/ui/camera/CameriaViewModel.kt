@@ -20,7 +20,7 @@ import javax.inject.Inject
 data class AnalysisResult(
     val category: String = "",
     val primaryColor: String = "",
-    val tertiaryColor: String = ""
+    val tertiaryColors: List<String> = emptyList()
 )
 
 @HiltViewModel
@@ -57,9 +57,7 @@ class CameraViewModel @Inject constructor(
                     analysisResult = AnalysisResult(
                         category = result.detectedLabel,
                         primaryColor = result.primaryColor,
-                        //teritary color is empty, thought i hard coded it for, will need to trace
-                        // back later
-                        tertiaryColor = "Green"
+                        tertiaryColors = result.tertiaryColors
                     ),
                     showDialog = true
                 )
