@@ -110,7 +110,6 @@ class ClothingImageAnalyzer @Inject constructor() {
         )
 
     }
-
     // Helper to convert Android Color Int to Hex String (e.g. #FF0000)
     private fun toHex(color: Int): String {
         return String.format("#%06X", (0xFFFFFF and color))
