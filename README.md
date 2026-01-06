@@ -1,37 +1,23 @@
 # CleanFit 🧥✨
 
-**CleanFit** is my take on a digital closet companion. It's a native Android app built with **Jetpack Compose** that helps you organize your wardrobe by snapping photos. The app uses on-device machine learning to identify your clothes, figure out their colors, and eventually suggest some killer outfits.
+**CleanFit** is my take on a digital closet companion. It's a native Android app built with **Jetpack Compose** that helps you organize your wardrobe by snapping photos. The app uses on-device machine learning (MobileNet_V3 Model) to identify your clothes, figure out their colors, and eventually suggest some killer outfits.
 
-I built CleanFit to get my hands dirty with **modern Android development standards** while building something that's actually unique and fun to use.
+Main purpose of me building out this Android App is that I want to actually do Android dev full time. I personally have years of me doing full stack dev work and I thought this project would be a cool transition space for me to learn the craft and use it as stepping stone for me to apply to some android dev roles.
 
 ## 🚀 What It Does
 
-- **Snap & Scan:** Uses **CameraX** to capture your fits.
-- **AI Magic:** Runs **ML Kit** (and soon custom TensorFlow Lite models) to figure out if that's a shirt, pants, or shoes, and even spots brand logos.
-- **Style Matcher:** Analyzes colors to help you pair items together (no more clashing outfits).
-- **Smart Login:** Uses the new Android **Credential Manager** for smooth Google Sign-Ins.
+Basically I go ahead and use CameraX to connect your Anroids Camera and I use the MLKit Api to help pass images to a analyzer to identify an images. Quick note though the base object detection capabablities of MLKit is pretty bad. So I went ahead and found a tensorflow model (MobileNet_V3 Model) to get better responses and just used mlkit as a wrapper to help pass the images to the model. This is where I also decided to use Pallete API, a Jetpack libary to help me identify the main and tertiary colors of your clothing item (object detection models can't see color since they are priotizing object detection; all images passed to them are black and white). Then I just use normal color theory to recommend you clothing items that would match your current attire. If you want to learn more of course check out the code here or just reach out to me. 
 
 ## 🛠️ The Cool Tech Under the Hood
 
-I wanted to use the latest and greatest tools available for Android right now. No legacy code here.
-
-- **Language:** Kotlin (obviously).
+- **Language:** Kotlin, TypeScript (for Supabase calls, no row level security here).
 - **UI:** **Jetpack Compose** + Material 3.
 - **Navigation:** The brand new **Navigation 3** (`androidx.navigation3`).
-- **AI/ML:** **ML Kit** for object detection and **CameraX** for the camera feed.
+- **Identification:** **ML Kit** for object detection, **MobileNet_V3 Model** for the model,  **CameraX** for the camera feed and **Pallete** for color detection.
 - **DI:** **Hilt** for dependency injection.
 - **Async:** Coroutines & Flow.
-- **Architecture:** It follows a solid **Clean Architecture** pattern (UI/Domain/Data), so the code is actually scalable and testable, not just a spaghetti mess.
+- **Architecture:** MVVM.
 
-## 🎯 Why CleanFit?
-
-I wanted to move beyond beginner tutorials and build a real-world application that handles:
-
-1. **Real hardware interactions** (Camera).
-2. **On-device Intelligence** (ML models).
-3. **Modern Architecture** (Clean Arch + MVVM) effectively.
-
-It's a playground for learning the *right* way to build Android apps in 2025.
 
 ## 🏃 Getting Started
 
@@ -44,9 +30,8 @@ It's a playground for learning the *right* way to build Android apps in 2025.
 
 ## 🔮 What's Coming Next
 
-- Training custom TFLite models to recognize specific streetwear logos.
-- Building out the local database to save your closet.
-- Adding a "Mix & Match" playground screen.
+- Run another model to help identify logos/brands for clothing items.
+- Release this app on the PlayStore 🙂.
 
 ## 📄 License
 
