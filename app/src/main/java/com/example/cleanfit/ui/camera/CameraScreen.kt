@@ -127,7 +127,13 @@ fun CameraScreen(
                     println("Final Primary: $finalPrimaryColor")
                     println("Final Palette: $finalTertiaryList")
 
-                    viewModel.onDialogDismiss()
+                    viewModel.saveClothingItem(
+                        context = context,
+                        label = finalItemType,
+                        rawLabel = result.category,
+                        primaryColor = finalPrimaryColor,
+                        tertiaryColors = finalTertiaryList
+                    )
                     onImageCaptured(true) // Navigate away
                 },
 

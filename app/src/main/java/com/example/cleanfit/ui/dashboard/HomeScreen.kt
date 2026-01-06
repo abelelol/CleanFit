@@ -41,6 +41,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -51,6 +52,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import com.example.cleanfit.data.model.ClosetItemUi
 import com.example.cleanfit.data.model.OutfitRec
 
 @Composable
@@ -162,8 +164,8 @@ fun HomeScreen(
             contentPadding = PaddingValues(horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items(uiState.recommendations) { outfit ->
-                OutfitCard(outfit)
+            items(uiState.recentItems) { outfit ->
+                ClosetItemCard(outfit)
             }
         }
 
@@ -222,77 +224,49 @@ fun HomeScreen(
 }
 
 @Composable
-fun OutfitCard(outfit: OutfitRec) {
+fun ClosetItemCard(item: ClosetItemUi) {
     Card(
         modifier = Modifier
-            .width(240.dp)
-            .height(320.dp),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            .width(160.dp)  // Slightly narrower than before
+            .height(220.dp),
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
-        Column(modifier = Modifier.fillMaxSize()) {
-
-            // Image Area with Coil
+        Box(modifier = Modifier.fillMaxSize()) {
+            // 1. The Image
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(outfit.imageUrl)
-                    .listener(
-                        //
-                        onStart = { Log.d("AsyncImage debug", "Loading Started")},
-                        onCancel = { Log.d("AsyncImage debug", "Loading Cancelled")},
-                        onError = { request, result ->
-                            Log.e("COIL_DEBUG", "Image failed: ${result.throwable.message}")
-                            result.throwable.printStackTrace()}
-                        ,
-                        onSuccess = { request, result ->
-                            Log.d("AsyncImage debug", "Loading Succeeded")
-                        }
-                    )
+                    .data(item.imageUrl) // This loads the file:// URI
                     .crossfade(true)
                     .build(),
-                contentDescription = outfit.title,
+                contentDescription = item.label,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .weight(3f)
-                    .fillMaxWidth()
-                    .background(Color.LightGray)
+                modifier = Modifier.fillMaxSize()
             )
 
-            // Text Content Area
-            Column(
+            // 2. The Gradient Overlay (so text is readable)
+            Box(
                 modifier = Modifier
-                    .weight(2f)
-                    .padding(12.dp),
-                verticalArrangement = Arrangement.SpaceBetween
-            ) {
-                Column {
-                    Text(
-                        text = outfit.title,
-                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold)
+                    .fillMaxSize()
+                    .background(
+                        Brush.verticalGradient(
+                            colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.7f)),
+                            startY = 300f // Start gradient partway down
+                        )
                     )
-                    Text(
-                        text = outfit.subtitle,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
+            )
 
-                Button(
-                    onClick = { /* TODO: Wear Logic */ },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(36.dp),
-                    contentPadding = PaddingValues(0.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                    ),
-                    shape = RoundedCornerShape(8.dp)
-                ) {
-                    Text("Wear Today", style = MaterialTheme.typography.labelLarge)
-                }
-            }
+            // 3. The Label
+            Text(
+                text = item.label,
+                style = MaterialTheme.typography.titleMedium.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                ),
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(12.dp)
+            )
         }
     }
 }

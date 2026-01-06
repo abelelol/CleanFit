@@ -7,3 +7,9 @@ data class OutfitRec(
     val subtitle: String,
     val imageUrl: String
 )
+
+data class ClosetItemUi(
+    val id: Long,
+    val label: String,      // e.g. "Green Hoodie"
+    val imageUrl: String    // e.g. "file:///data/user/0/..."
+)

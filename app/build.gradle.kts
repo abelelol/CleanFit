@@ -56,9 +56,9 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    // why the heck do i need another artifact to get material 3 icons !?
     implementation("androidx.compose.material:material-icons-extended")
     implementation(libs.androidx.camera.view)
-//    implementation(libs.image.labeling.custom.common) // why the heck do i need another artifact to get material 3 icons !?
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -69,7 +69,7 @@ dependencies {
 
     // 1. Hilt (Dependency Injection)
     implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler) // 👈 CHANGE 'kapt' TO 'ksp'
+    ksp(libs.hilt.compiler)
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
     // 2. Supabase
@@ -103,13 +103,16 @@ dependencies {
     implementation (libs.androidx.camera.video)
     implementation (libs.androidx.camera.view.v142)
     implementation (libs.androidx.camera.extensions)
-
-//    implementation(libs.image.labeling)
-
-//    implementation(libs.object1.detection.custom)
-
     implementation(libs.image.labeling.custom)
     implementation(libs.androidx.palette)
+
+    // Room
+    implementation(libs.androidx.room.runtime)
+    // If this project uses any Kotlin source, use Kotlin Symbol Processing (KSP)
+    // See Add the KSP plugin to your project
+    ksp(libs.androidx.room.compiler)
+    // optional - Paging 3 Integration
+    implementation(libs.androidx.room.paging)
 
 
     // extras
