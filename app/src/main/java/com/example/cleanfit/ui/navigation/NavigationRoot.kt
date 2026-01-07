@@ -19,6 +19,7 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.example.cleanfit.ui.camera.CameraScreen
+import com.example.cleanfit.ui.closet.ClosetScreen
 import com.example.cleanfit.ui.dashboard.HomeScreen
 import com.example.cleanfit.ui.login.LoginScreen
 
@@ -83,10 +84,9 @@ fun NavigationRoot(
                         )
                     }
                     entry<Route.ClosetRoute>{
-                        Box(modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center) {
-                            Text("Closet")
-                        }
+                        ClosetScreen(
+                            onScanClick = { navigator.navigate(Route.CameraRoute) }
+                        )
                     }
                     // look into else case for wrong entry
 //                    entry<Route> {
