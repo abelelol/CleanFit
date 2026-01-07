@@ -21,6 +21,7 @@ import androidx.navigation3.ui.NavDisplay
 import com.example.cleanfit.ui.camera.CameraScreen
 import com.example.cleanfit.ui.closet.ClosetScreen
 import com.example.cleanfit.ui.dashboard.HomeScreen
+import com.example.cleanfit.ui.itemdetail.ItemDetailScreen
 import com.example.cleanfit.ui.login.LoginScreen
 
 data object Home
@@ -68,7 +69,8 @@ fun NavigationRoot(
                     entry<Route.HomeRoute> {
                         HomeScreen(
                             onScanClick = { navigator.navigate(Route.CameraRoute) },
-                            onClosetClick = { navigator.navigate(Route.ClosetRoute) }
+                            onClosetClick = { navigator.navigate(Route.ClosetRoute) },
+                            onItemClick = { itemId -> navigator.navigate(Route.ItemDetailRoute(itemId)) }
                         )
                     }
                     entry<Route.CameraRoute>{
@@ -85,7 +87,15 @@ fun NavigationRoot(
                     }
                     entry<Route.ClosetRoute>{
                         ClosetScreen(
-                            onScanClick = { navigator.navigate(Route.CameraRoute) }
+                            onScanClick = { navigator.navigate(Route.CameraRoute) },
+                            onItemClick = { itemId -> navigator.navigate(Route.ItemDetailRoute(itemId)) }
+                        )
+                    }
+
+                    entry<Route.ItemDetailRoute> { route ->
+                        ItemDetailScreen(
+                            itemId = route.itemId,
+                            onBackClick = { navigator.goBack() }
                         )
                     }
                     // look into else case for wrong entry

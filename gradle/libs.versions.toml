@@ -30,6 +30,7 @@ imageLabelingCustomCommon = "17.0.0"
 imageLabelingCustom = "17.0.3"
 palette = "1.0.0"
 roomRuntime = "2.8.4"
+foundationLayout = "1.10.0"
 
 [libraries]
 androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraCore" }
@@ -80,6 +81,7 @@ androidx-material3-adaptive-navigation3 = { group = "androidx.compose.material3.
 androidx-camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "cameraView" }
 image-labeling-custom-common = { group = "com.google.mlkit", name = "image-labeling-custom-common", version.ref = "imageLabelingCustomCommon" }
 image-labeling-custom = { module = "com.google.mlkit:image-labeling-custom", version.ref = "imageLabelingCustom" }
+androidx-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout", version.ref = "foundationLayout" }
 
 
 [plugins]

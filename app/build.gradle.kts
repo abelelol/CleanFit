@@ -59,6 +59,7 @@ dependencies {
     // why the heck do i need another artifact to get material 3 icons !?
     implementation("androidx.compose.material:material-icons-extended")
     implementation(libs.androidx.camera.view)
+    implementation(libs.androidx.foundation.layout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

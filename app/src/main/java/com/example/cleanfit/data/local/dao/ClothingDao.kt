@@ -20,9 +20,13 @@ interface ClothingDao {
     @Delete
     suspend fun deleteClothingItem(item: ClothingItem)
 
+    @Query("SELECT * FROM clothing_items WHERE id = :itemId")
+    suspend fun getItemById(itemId: Long): ClothingItem?
+
     // Future proofing: Helper to find specific categories
     @Query("SELECT * FROM clothing_items WHERE label = :category ORDER BY dateAdded DESC")
     fun getItemsByCategory(category: String): Flow<List<ClothingItem>>
+
 
 
 }

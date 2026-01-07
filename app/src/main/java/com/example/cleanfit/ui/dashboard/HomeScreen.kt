@@ -59,6 +59,7 @@ import com.example.cleanfit.data.model.OutfitRec
 fun HomeScreen(
     onScanClick: () -> Unit,
     onClosetClick: () -> Unit,
+    onItemClick: (Long) -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -165,7 +166,10 @@ fun HomeScreen(
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(uiState.recentItems) { outfit ->
-                ClosetItemCard(outfit)
+                ClosetItemCard(
+                    item = outfit,
+                    onClick = { onItemClick(outfit.id) }
+                )
             }
         }
 
@@ -224,13 +228,14 @@ fun HomeScreen(
 }
 
 @Composable
-fun ClosetItemCard(item: ClosetItemUi) {
+fun ClosetItemCard(item: ClosetItemUi, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .width(160.dp)  // Slightly narrower than before
             .height(220.dp),
         shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        onClick = onClick
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             // 1. The Image

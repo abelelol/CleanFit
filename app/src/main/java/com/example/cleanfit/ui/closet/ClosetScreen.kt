@@ -68,6 +68,7 @@ import com.example.cleanfit.data.model.ClosetItemUi
 @Composable
 fun ClosetScreen(
     onScanClick: () -> Unit,
+    onItemClick: (Long) -> Unit,
     viewModel: ClosetViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -156,7 +157,7 @@ fun ClosetScreen(
                     modifier = Modifier.fillMaxSize()
                 ) {
                     items(uiState.items) { item ->
-                        ClosetGridItem(item)
+                        ClosetGridItem(item, onClick = { onItemClick(item.id) })
                     }
                     // Spacer for FAB
                     item { Spacer(modifier = Modifier.height(80.dp)) }
@@ -259,14 +260,15 @@ fun ClosetTopBar(
 }
 
 @Composable
-fun ClosetGridItem(item: ClosetItemUi) {
+fun ClosetGridItem(item: ClosetItemUi, onClick: () -> Unit) {
     Card(
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         modifier = Modifier
             .fillMaxWidth()
-            .height(260.dp)
+            .height(260.dp),
+        onClick = onClick
     ) {
         Column {
             Box(

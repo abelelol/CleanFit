@@ -25,6 +25,10 @@ sealed interface Route : NavKey {
     @Serializable
     data object ClosetRoute : Route
 
+    // screen to view recommended clothing based on picture
+    @Serializable
+    data class ItemDetailRoute(val itemId: Long) : Route
+
 
 
 }
