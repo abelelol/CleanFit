@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.cleanfit.data.local.dao.ClothingDao
 import com.example.cleanfit.data.model.ClosetItemUi
 import com.example.cleanfit.data.model.ProductRecommendation
+import com.example.cleanfit.data.remote.SerplyApi
+import com.example.cleanfit.util.ColorUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,6 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ItemDetailViewModel @Inject constructor(
     private val clothingDao: ClothingDao,
+    private val serplyApi: SerplyApi,
     savedStateHandle: SavedStateHandle // To get the arguments passed from navigation
 ) : ViewModel() {
 
@@ -32,35 +35,42 @@ class ItemDetailViewModel @Inject constructor(
         viewModelScope.launch {
             val item = clothingDao.getItemById(itemId)
 
-            // Mock Recommendations till get I get serply working
-            val recommendations = listOf(
-                ProductRecommendation(
-                    title = "Women's Red Cocktail Dress",
-                    price = 59.99,
-                    currency = "USD",
-                    productUrl = "https://www.macys.com",
-                    imageUrl = "https://images.unsplash.com/photo-1595777457583-95e059d581b8",
-                    source = "Macy's",
-                    rating = 4.6,
-                    reviews = 134
-                ),
-                ProductRecommendation(
-                    title = "Red Summer Maxi Dress",
-                    price = 39.99,
-                    currency = "USD",
-                    productUrl = "https://www.asos.com",
-                    imageUrl = "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1",
-                    source = "ASOS",
-                    rating = 0.0,
-                    reviews = 0
-                )
-            )
-
             if (item != null) {
+                val uiItem = ClosetItemUi(item.id, item.label, item.imageUri)
+
+                // wanted to load base image from db first and not wait on the query
+                _uiState.update {
+                    it.copy(selectedItem = uiItem)
+                }
+
+
+
+                val colorName = ColorUtils.getColorNameFromHex(item.primaryColor)
+                val query = "$colorName ${ item.label}".trim()
+
+                val recommendations = try {
+                    val response = serplyApi.searchProducts(query)
+                    response.products?.take(4)?.map { dto ->
+                        ProductRecommendation(
+                            title = dto.title,
+                            price = dto.price ?: 0.0,
+                            currency = dto.currency ?: "USD",
+                            productUrl = dto.link,
+                            imageUrl = dto.imageUrl ?: "",
+                            source = dto.source ?: "Web",
+                            rating = 0.0,
+                            reviews = 0
+                        )
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    emptyList()
+                }
+
+                // Update the rest of the viewmodel when they arrive
                 _uiState.update {
                     it.copy(
-                        selectedItem = ClosetItemUi(item.id, item.label, item.imageUri),
-                        recommendations = recommendations,
+                        recommendations = recommendations ?: emptyList(),
                         isLoading = false
                     )
                 }

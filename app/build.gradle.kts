@@ -44,6 +44,9 @@ android {
     buildFeatures {
         compose = true
     }
+    kotlinOptions {
+//        freeCompilerArgs = listOf("-XXLanguage:+PropertyParamAnnotationDefaultTargetMode")
+    }
 }
 
 dependencies {
@@ -120,6 +123,15 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
     implementation(libs.kotlinx.coroutines.play.services)
+    implementation(libs.retrofit)
+    implementation(libs.logging.interceptor)
+
+    // 2. Moshi Converter (Must match Retrofit version)
+    implementation(libs.converter.moshi.v300)
+
+    // 3. Moshi Library (Latest Stable)
+    implementation(libs.moshi.kotlin)
+
 
 
 
