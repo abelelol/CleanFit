@@ -128,6 +128,7 @@ dependencies {
 
     // 2. Moshi Converter (Must match Retrofit version)
     implementation(libs.converter.moshi.v300)
+    ksp(libs.moshi.kotlin.codegen)
 
     // 3. Moshi Library (Latest Stable)
     implementation(libs.moshi.kotlin)

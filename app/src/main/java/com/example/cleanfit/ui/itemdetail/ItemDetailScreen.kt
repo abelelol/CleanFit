@@ -361,12 +361,14 @@ fun ProductRecommendationCard(product: ProductRecommendation) {
             Column(
                 modifier = Modifier.padding(12.dp)
             ) {
-                Text(
-                    text = product.title,
-                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
-                    color = MaterialTheme.colorScheme.onSurface,
-                    maxLines = 1
-                )
+                product.title?.let {
+                    Text(
+                        text = it,
+                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
+                        color = MaterialTheme.colorScheme.onSurface,
+                        maxLines = 1
+                    )
+                }
 
                 // Price & Source Row
                 Row(
@@ -394,7 +396,7 @@ fun ProductRecommendationCard(product: ProductRecommendation) {
                 Button(
                     onClick = {
                         // Launch the URL in the default browser
-                        val intent = Intent(Intent.ACTION_VIEW, product.productUrl.toUri())
+                        val intent = Intent(Intent.ACTION_VIEW, product.productUrl?.toUri())
                         context.startActivity(intent)
                     },
                     modifier = Modifier

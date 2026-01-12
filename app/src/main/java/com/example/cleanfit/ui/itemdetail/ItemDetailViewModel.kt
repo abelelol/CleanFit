@@ -6,7 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.cleanfit.data.local.dao.ClothingDao
 import com.example.cleanfit.data.model.ClosetItemUi
 import com.example.cleanfit.data.model.ProductRecommendation
-import com.example.cleanfit.data.remote.SerplyApi
+import com.example.cleanfit.data.remote.SerperApi
+import com.example.cleanfit.data.remote.dto.SerperQuery
 import com.example.cleanfit.util.ColorUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ItemDetailViewModel @Inject constructor(
     private val clothingDao: ClothingDao,
-    private val serplyApi: SerplyApi,
+    private val serperApi: SerperApi,
     savedStateHandle: SavedStateHandle // To get the arguments passed from navigation
 ) : ViewModel() {
 
@@ -46,15 +47,17 @@ class ItemDetailViewModel @Inject constructor(
 
 
                 val colorName = ColorUtils.getColorNameFromHex(item.primaryColor)
-                val query = "$colorName ${ item.label}".trim()
+                val search = "$colorName ${ item.label}".trim()
+                // limit response to only top 20 for now. will look into pagination for this
+                val query = SerperQuery(q = search, country = "us", language = "en", num = 20)
 
                 val recommendations = try {
-                    val response = serplyApi.searchProducts(query)
+                    val response = serperApi.searchShopping(query)
                     response.products?.take(4)?.map { dto ->
                         ProductRecommendation(
                             title = dto.title,
                             price = dto.price ?: 0.0,
-                            currency = dto.currency ?: "USD",
+                            currency = dto.price ?: "USD",
                             productUrl = dto.link,
                             imageUrl = dto.imageUrl ?: "",
                             source = dto.source ?: "Web",

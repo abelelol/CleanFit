@@ -91,7 +91,6 @@ fun ScanResultDialog(
             }
         }
 
-        // CHANGED: Renamed to avoid confusion. Tracks the highlighted circle in the bottom list.
         var activeTertiaryColorHex by remember { mutableStateOf(currentPalette.first()) }
 
 
