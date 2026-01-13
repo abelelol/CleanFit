@@ -20,7 +20,7 @@ Basically I go ahead and use CameraX to connect your Androids Camera and I use t
 
 ## 🎥 Video Demo
 
-https://github.com/user-attachments/assets/648ce4dc-4f5d-4f66-8aa0-63b42071860b
+https://github.com/user-attachments/assets/7caeafc0-8482-4a77-9df6-6dc34facaae9
 
 
 ## 🏃 Getting Started
