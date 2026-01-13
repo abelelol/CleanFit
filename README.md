@@ -6,7 +6,7 @@ Main purpose of me building out this Android App is that I want to actually do A
 
 ## 🚀 What It Does
 
-Basically I go ahead and use CameraX to connect your Anroids Camera and I use the MLKit Api to help pass images to a analyzer to identify an images. Quick note though the base object detection capabablities of MLKit is pretty bad. So I went ahead and found a tensorflow model (MobileNet_V3 Model) to get better responses and just used mlkit as a wrapper to help pass the images to the model. This is where I also decided to use Pallete API, a Jetpack libary to help me identify the main and tertiary colors of your clothing item (object detection models can't see color since they are priotizing object detection; all images passed to them are black and white). Then I just use normal color theory to recommend you clothing items that would match your current attire. If you want to learn more of course check out the code here or just reach out to me. 
+Basically I go ahead and use CameraX to connect your Androids Camera and I use the MLKit Api to help pass images to a analyzer to identify an images. Quick note though the base object detection capabablities of MLKit is pretty bad. So I went ahead and found a tensorflow model (MobileNet_V3 Model) to get better responses and just used mlkit as a wrapper to help pass the images to the model. This is where I also decided to use Pallete API, a Jetpack libary to help me identify the main and tertiary colors of your clothing item (object detection models can't see color since they are priotizing object detection; all images passed to them are black and white). Then I just use normal color theory to recommend you clothing items that would match your current attire. If you want to learn more of course check out the code here or just reach out to me. 
 
 ## 🛠️ The Cool Tech Under the Hood
 
@@ -17,6 +17,10 @@ Basically I go ahead and use CameraX to connect your Anroids Camera and I use th
 - **DI:** **Hilt** for dependency injection.
 - **Async:** Coroutines & Flow.
 - **Architecture:** MVVM.
+
+## 🎥 Video Demo
+
+https://github.com/user-attachments/assets/648ce4dc-4f5d-4f66-8aa0-63b42071860b
 
 
 ## 🏃 Getting Started
@@ -29,7 +33,9 @@ Basically I go ahead and use CameraX to connect your Anroids Camera and I use th
 3. **Sync Gradle** and hit **Run** on your device/emulator.
 
 ## 🔮 What's Coming Next
-
+- General clean up
+- Resolving minor issues and adding features (pulling in to many clothing items even after hard coding limit in query, try to optimize current ml models some more, connect user info with data stored in supabase, etc)
+- Add some Unit Tests
 - Run another model to help identify logos/brands for clothing items.
 - Release this app on the PlayStore 🙂.
 
