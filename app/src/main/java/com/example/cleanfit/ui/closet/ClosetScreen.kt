@@ -5,13 +5,16 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -30,8 +33,11 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
@@ -42,6 +48,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -51,12 +58,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.AsyncImage
@@ -80,8 +90,14 @@ fun ClosetScreen(
     val categories = listOf("All", "Tops", "Bottoms", "Shoes", "Accessories")
     var selectedCategory by remember { mutableStateOf("All") }
 
+    // keep track of item to delete for confirmation
+    var itemToDelete by remember { mutableStateOf<ClosetItemUi?>(null) }
+
     // I honestly love scaffold, simplifies the ui structure of an android screen so well, especially coming from web
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
+        // resolved annoying padding on top of bottom nav bar, i guess scaffold defaults space for nav bar and this clears it out
+        contentWindowInsets = WindowInsets(0.dp),
         topBar = {
             ClosetTopBar(
                 itemCount = uiState.items.size,
@@ -106,7 +122,7 @@ fun ClosetScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .background(MaterialTheme.colorScheme.background)
+//                .background(MaterialTheme.colorScheme.background)
         ) {
 
             if (!isSearchActive) {
@@ -145,7 +161,7 @@ fun ClosetScreen(
                         text = message,
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                        textAlign = TextAlign.Center
                     )
                 }
             } else {
@@ -157,12 +173,42 @@ fun ClosetScreen(
                     modifier = Modifier.fillMaxSize()
                 ) {
                     items(uiState.items) { item ->
-                        ClosetGridItem(item, onClick = { onItemClick(item.id) })
+                        ClosetGridItem(
+                            item,
+                            onClick = { onItemClick(item.id) },
+                            onLongClick = { itemToDelete = item }
+                        )
                     }
                     // Spacer for FAB
                     item { Spacer(modifier = Modifier.height(80.dp)) }
                 }
             }
+        }
+        if (itemToDelete != null) {
+            AlertDialog(
+                onDismissRequest = { itemToDelete = null },
+                title = {
+                    Text(text = "Delete Item?")
+                },
+                text = {
+                    Text(text = "Are you sure you want to delete \"${itemToDelete?.label}\"? This cannot be undone.")
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            itemToDelete?.let { viewModel.deleteItem(it.id) }
+                            itemToDelete = null
+                        }
+                    ) {
+                        Text("Delete", color = MaterialTheme.colorScheme.error)
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { itemToDelete = null }) {
+                        Text("Cancel")
+                    }
+                }
+            )
         }
     }
 }
@@ -259,16 +305,34 @@ fun ClosetTopBar(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ClosetGridItem(item: ClosetItemUi, onClick: () -> Unit) {
-    Card(
+fun ClosetGridItem(
+    item: ClosetItemUi,
+    onClick: () -> Unit,
+    onLongClick: () -> Unit
+) {
+    ElevatedCard(
         shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 6.dp),
+        colors = CardDefaults.elevatedCardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
         modifier = Modifier
             .fillMaxWidth()
-            .height(260.dp),
-        onClick = onClick
+            .height(260.dp)
+            .shadow(
+                elevation = 6.dp,
+                shape = RoundedCornerShape(16.dp),
+                clip = false,
+                ambientColor = Color.Black,
+                spotColor = Color.Black
+            ) // this should be default behavior for elevated cards >:(
+            .clip(RoundedCornerShape(16.dp))
+            .combinedClickable(
+                onClick = onClick,
+                onLongClick = onLongClick
+            )
     ) {
         Column {
             Box(

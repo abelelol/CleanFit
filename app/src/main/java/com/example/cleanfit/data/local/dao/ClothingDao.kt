@@ -20,6 +20,9 @@ interface ClothingDao {
     @Delete
     suspend fun deleteClothingItem(item: ClothingItem)
 
+    @Query("DELETE FROM clothing_items WHERE id = :itemId")
+    suspend fun deleteById(itemId: Long)
+
     @Query("SELECT * FROM clothing_items WHERE id = :itemId")
     suspend fun getItemById(itemId: Long): ClothingItem?
 

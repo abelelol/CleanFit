@@ -36,6 +36,7 @@ palette = "1.0.0"
 retrofit = "3.0.0"
 roomRuntime = "2.8.4"
 foundationLayout = "1.10.0"
+foundation = "1.10.0"
 
 [libraries]
 androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraCore" }
@@ -93,6 +94,7 @@ image-labeling-custom-common = { group = "com.google.mlkit", name = "image-label
 image-labeling-custom = { module = "com.google.mlkit:image-labeling-custom", version.ref = "imageLabelingCustom" }
 androidx-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout", version.ref = "foundationLayout" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+androidx-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation" }
 
 
 [plugins]

@@ -70,6 +70,8 @@ import com.example.cleanfit.data.model.ClosetItemUi
 import com.example.cleanfit.data.model.ProductRecommendation
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.core.net.toUri
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -122,7 +124,7 @@ fun ItemDetailScreen(
                 }
             }
 
-            // 2. HEADER: "Top Combinations" (Spans full width)
+            // HEADER: "Top Combinations" (Spans full width)
             item(span = { GridItemSpan(2) }) {
                 Row(
                     modifier = Modifier
@@ -135,7 +137,6 @@ fun ItemDetailScreen(
                         Text(
                             text = "Top Combinations",
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                            // CHANGED: From Color.White to onBackground (Dark Text)
                             color = MaterialTheme.colorScheme.onBackground
                         )
                         Spacer(modifier = Modifier.width(8.dp))
@@ -152,16 +153,63 @@ fun ItemDetailScreen(
                             )
                         }
                     }
-                    TextButton(onClick = { /* View All */ }) {
-                        Text("View All", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    TextButton(onClick = { viewModel.toggleViewAll() }) {
+                        Text(
+                            text = if (uiState.isViewAllMode) "Show Less" else "View All",
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     }
                 }
             }
 
-            // 3. PRODUCT CARDS (Grid Items)
-            items(uiState.recommendations) { product ->
-                ProductRecommendationCard(product = product)
+            if (uiState.isShoppingLoading) {
+                // Initial Spinner when pulling data
+                item(span = { GridItemSpan(2) }) {
+                    Box(modifier = Modifier.height(200.dp).fillMaxWidth(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                    }
+                }
+            } else {
+                if (uiState.recommendations.isEmpty()) {
+                    item(span = { GridItemSpan(2) }) { /* Empty State Text */ }
+                } else {
+                    // THE ITEM LIST
+                    items(uiState.recommendations.size) { index ->
+                        val product = uiState.recommendations[index]
+
+                        // --- INFINITE SCROLL LOGIC ---
+                        // If we are at the last item AND in View All mode, load next page.
+                        if (uiState.isViewAllMode && index >= uiState.recommendations.lastIndex) {
+                            LaunchedEffect(Unit) {
+                                viewModel.loadNextPage()
+                            }
+                        }
+
+                        ProductRecommendationCard(product = product)
+                    }
+                }
             }
+
+            // BOTTOM PAGING SPINNER
+            // Only shows when loading page 2, 3, etc.
+            if (uiState.isLoadingMore) {
+                item(span = { GridItemSpan(2) }) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp),
+                            strokeWidth = 2.dp,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+            }
+
+
         }
     }
 }
@@ -386,7 +434,7 @@ fun ProductRecommendationCard(product: ProductRecommendation) {
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
-                        text = "${product.currency}${product.price}",
+                        text = product.currency,
                         style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
                         color = MaterialTheme.colorScheme.onSurface
                     )

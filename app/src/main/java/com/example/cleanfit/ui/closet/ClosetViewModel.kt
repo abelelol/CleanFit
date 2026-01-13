@@ -42,26 +42,7 @@ class ClosetViewModel @Inject constructor(
             }
         }
     }
-//    val closetState: StateFlow<ClosetUiState> = clothingDao.getAllClothingItems()
-//        .map { entities ->
-//            ClosetUiState(
-//                isLoading = false,
-//                items = entities.map { entity ->
-//                    ClosetItemUi(
-//                        id = entity.id,
-//                        label = entity.label,
-//                        imageUrl = entity.imageUri,
-//                        // I'll need to find a way to recategorize the items based on their labels for closet
-//                        // tops =  shirts, sweaters, blouses, etc bottoms = jeans, shorts, pants, etc
-//                    )
-//                }
-//            )
-//        }
-//        .stateIn(
-//            scope = viewModelScope,
-//            started = SharingStarted.WhileSubscribed(5000),
-//            initialValue = ClosetUiState(isLoading = true)
-//        )
+
 
     fun filterText(input: String) {
         _uiState.update { currentState ->
@@ -76,6 +57,12 @@ class ClosetViewModel @Inject constructor(
                 isLoading = false,
                 searchQuery = input
             )
+        }
+    }
+
+    fun deleteItem(itemId: Long) {
+        viewModelScope.launch {
+            clothingDao.deleteById(itemId)
         }
     }
 
