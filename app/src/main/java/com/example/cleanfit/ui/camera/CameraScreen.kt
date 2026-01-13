@@ -20,8 +20,11 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import android.graphics.Bitmap
+import android.graphics.ImageDecoder
 import android.graphics.Matrix
 import android.net.Uri
+import android.os.Build
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.ImageProxy
@@ -72,6 +75,20 @@ fun CameraScreen(
         }
     }
 
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia()
+    ) { uri: Uri? ->
+        if (uri != null) {
+            // User picked an image!
+            // We need to convert this URI to a Bitmap for the AI Analyzer
+            val bitmap = uriToBitmap(context, uri)
+            if (bitmap != null) {
+                // Reuse your existing logic!
+                viewModel.onPhotoCaptured(bitmap, uri)
+            }
+        }
+    }
+
     // Permission Setup
 
     if (hasCameraPermission) {
@@ -85,6 +102,11 @@ fun CameraScreen(
 //                    onImageCaptured(true)
 
                 }
+            },
+            onGalleryClick = {
+                galleryLauncher.launch(
+                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                )
             },
             cameraPreview = {
                 AndroidView(
@@ -116,6 +138,7 @@ fun CameraScreen(
                     dominantColorHex = result.primaryColor,
                     tertiaryColorHexes = result.tertiaryColors
                 ),
+                capturedImgUri = uiState.capturedUri!!,
                 onDismissRequest = { viewModel.onDialogDismiss() },
                 onEditItemTypeClick = { /* TODO */ },
 
@@ -204,3 +227,15 @@ fun Bitmap.rotate(degrees: Float): Bitmap {
     return Bitmap.createBitmap(this, 0, 0, width, height, matrix, true)
 }
 
+
+fun uriToBitmap(context: Context, uri: Uri): Bitmap? {
+    return try {
+        val source = ImageDecoder.createSource(context.contentResolver, uri)
+        ImageDecoder.decodeBitmap(source) { decoder, _, _ ->
+            decoder.isMutableRequired = true
+        }
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
+    }
+}

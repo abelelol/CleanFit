@@ -97,9 +97,18 @@ class ItemDetailViewModel @Inject constructor(
             if (item != null) {
                 val uiItem = ClosetItemUi(item.id, item.label, item.imageUri)
 
-                // Save query for pagination later
+                val clothingKeywords = setOf(
+                    "jersey", "shirt", "blouse", "jean", "sweatshirt", "cardigan",
+                    "velvet", "wool", "sandal", "shoe", "boot", "sneaker",
+                    "jacket", "coat", "dress", "vest", "skirt", "short", "sock",
+                    "gown", "hat", "trousers", "hoodie", "pullover", "t-shirt",
+                    "clothing", "garment", "textile"
+                )
+
+
+                // Randomize the initial clothing query instead of defaulting to the same anchor label
                 val colorName = ColorUtils.getColorNameFromHex(item.primaryColor)
-                currentSearchQuery = "$colorName ${item.label}".trim()
+                currentSearchQuery = "$colorName ${clothingKeywords.random()}".trim()
 
                 _uiState.update {
                     it.copy(
@@ -133,7 +142,7 @@ class ItemDetailViewModel @Inject constructor(
                 ProductRecommendation(
                     title = dto.title,
                     price = dto.price.toString(),
-                    currency = "$",
+                    currency = dto.price.toString(),// hardcoding to price now, will need to clean this up later since call adds both price and currency to the same attribute
                     productUrl = dto.link,
                     imageUrl = dto.imageUrl ?: "",
                     source = dto.source ?: "Web",
@@ -191,12 +200,51 @@ class ItemDetailViewModel @Inject constructor(
             fetchShoppingResults(isFirstPage = false)
         }
     }
+
+    fun toggleFilterSheet(show: Boolean) {
+        _uiState.update { it.copy(showFilterSheet = show) }
+    }
+
+    // 2. Handle the data coming back from the separate file
+    fun applySearchFilter(gender: String, itemType: String, color: String) {
+        viewModelScope.launch {
+            // Build the query string (e.g., "Male Black Jeans")
+            val sb = StringBuilder()
+            if (gender != "All") sb.append("$gender ")
+            if (color.isNotBlank()) {
+                val colorName = ColorUtils.getColorNameFromHex(color)
+                sb.append("$colorName ")
+            }
+            // Default to selected item label if user didn't type a specific item
+            val targetItem = itemType.ifBlank { uiState.value.selectedItem?.label ?: "" }
+            sb.append(targetItem)
+
+            val newQueryString = sb.toString().trim()
+
+            // Reset pagination and query
+            currentSearchQuery = newQueryString
+            currentPage = 1
+
+            // Update UI to loading state and close sheet
+            _uiState.update {
+                it.copy(
+                    isShoppingLoading = true,
+                    recommendations = emptyList(),
+                    showFilterSheet = false // <--- Important: Close the sheet here
+                )
+            }
+
+            // Fetch new results
+            fetchShoppingResults(isFirstPage = true)
+        }
+    }
 }
 
 data class ItemDetailUiState(
     val isLoading: Boolean = true,
     val isShoppingLoading: Boolean = false,
     val selectedItem: ClosetItemUi? = null,
+    val showFilterSheet: Boolean = false,   // show bottom sheet
     val isLoadingMore: Boolean = false,     // Pagination Load
     val isViewAllMode: Boolean = false,     // Toggle view all/view more state
     val recommendations: List<ProductRecommendation> = emptyList()

@@ -365,7 +365,7 @@ fun ClosetGridItem(
                     maxLines = 1
                 )
                 Text(
-                    text = "Unknown • All Year", // Placeholder until Category functionality is fully fleshed out
+                    text = "", // Placeholder until Category functionality is fully fleshed out
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

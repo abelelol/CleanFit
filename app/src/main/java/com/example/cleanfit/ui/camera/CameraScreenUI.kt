@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.FlashOff
+import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -19,6 +20,7 @@ import androidx.compose.ui.unit.dp
 fun CameraScreenUI(
     onCloseClick: () -> Unit,
     onCaptureClick: () -> Unit,
+    onGalleryClick: () -> Unit,
     cameraPreview: @Composable () -> Unit // Pass the camera view in as a slot
 ) {
     Box(
@@ -49,13 +51,39 @@ fun CameraScreenUI(
         }
 
         // 3. Bottom Capture Button
-        Box(
+
+        Row(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(bottom = 64.dp)
+                .padding(bottom = 64.dp, start = 32.dp, end = 32.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly // Distribute space
         ) {
+
+            // --- GALLERY BUTTON (Left) ---
+            GlassyButton(onClick = onGalleryClick) {
+                Icon(
+                    imageVector = Icons.Default.PhotoLibrary,
+                    contentDescription = "Gallery",
+                    tint = Color.White
+                )
+            }
+
+            // --- CAPTURE BUTTON (Center) ---
             CaptureButton(onClick = onCaptureClick)
+
+            // --- EMPTY SPACER (Right) ---
+            Spacer(modifier = Modifier.size(48.dp))
         }
+
+//        Box(
+//            modifier = Modifier
+//                .align(Alignment.BottomCenter)
+//                .padding(bottom = 64.dp)
+//        ) {
+//            CaptureButton(onClick = onCaptureClick)
+//        }
     }
 }
 

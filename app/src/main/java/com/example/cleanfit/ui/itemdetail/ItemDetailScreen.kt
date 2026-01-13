@@ -71,6 +71,7 @@ import com.example.cleanfit.data.model.ProductRecommendation
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.core.net.toUri
 
@@ -91,12 +92,15 @@ fun ItemDetailScreen(
     // need this to make sure the top bar disappears when i scroll down
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
+    val sheetState = rememberModalBottomSheetState()
+
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             ItemDetailTopBar(
                 onBackClick = onBackClick,
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
+                onFilterClick = { viewModel.toggleFilterSheet(true) }
             )
         }
     ) { paddingValues ->
@@ -212,6 +216,20 @@ fun ItemDetailScreen(
 
         }
     }
+
+    if (uiState.showFilterSheet) {
+        FilterBottomSheet(
+            sheetState = sheetState,
+            // close the sheet
+            onDismissRequest = {
+                viewModel.toggleFilterSheet(false)
+            },
+            // passing the filters into the query
+           onApplyClick = { gender, item, color ->
+                viewModel.applySearchFilter(gender, item, color)
+            }
+        )
+    }
 }
 
 
@@ -219,7 +237,8 @@ fun ItemDetailScreen(
 @Composable
 fun ItemDetailTopBar(
     onBackClick: () -> Unit,
-    scrollBehavior: TopAppBarScrollBehavior
+    scrollBehavior: TopAppBarScrollBehavior,
+    onFilterClick: () -> Unit = {}
 ) {
     CenterAlignedTopAppBar(
         scrollBehavior = scrollBehavior,
@@ -248,7 +267,7 @@ fun ItemDetailTopBar(
         },
         actions = {
             IconButton(
-                onClick = { /* Filter */ },
+                onClick = onFilterClick,
                 modifier = Modifier
                     .padding(end = 8.dp)
                     .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f), CircleShape)
@@ -467,3 +486,4 @@ fun ProductRecommendationCard(product: ProductRecommendation) {
         }
     }
 }
+
